@@ -1,0 +1,24 @@
+server:
+  port: 8100
+
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: SEUNSWAP
+  datasource:
+    url: jdbc:postgresql://localhost:5432/seunswap_db
+    username: postgres
+    password: postgres
+    hikari:
+      maxLifeTime: 1800000
+      idleTimeout: 600000
+      connectionTimeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /docs
