@@ -33,4 +33,3 @@ build/
 .vscode/
 
 # config
-src/main/resources/.env
