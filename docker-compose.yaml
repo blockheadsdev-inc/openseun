@@ -1,26 +1,23 @@
-version: '3.8'
+version: '2'
+
 services:
-  seunswap_v1:
-    image: postgres:14.0-alpine
-    restart: unless-stopped
+  app:
+    image: 'kaspir/openseun-v1:latest'
+    build:
+      context: .
+    container_name: seunswap
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://pg-server:5432/seunswap_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  db:
+    image: 'postgres:14.0-alpine'
+    container_name: pg-server
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=seunswap_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - db:/var/lib/postgresql
-
-  app:
-    depends_on:
-      - seunswap_v1
-    build: .
-    restart: on-failure
-    ports:
-      - "8100:8100"
-    stdin_open: true
-    tty: true
-
-volumes:
-  db:
