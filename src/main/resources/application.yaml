@@ -7,7 +7,7 @@ spring:
   application:
     name: SEUNSWAP
   datasource:
-    url: jdbc:postgresql://pg-server:5432/seunswap_db
+    url: jdbc:postgresql://localhost:5432/seunswap_db
     username: postgres
     password: postgres
     hikari:
@@ -21,3 +21,16 @@ spring:
 springdoc:
   swagger-ui:
     path: /docs
+
+hedera:
+  controller:
+    account_id: ${env.CONTROLLER_ID}
+    public_key: ${env.CONTROLLER_PUBLIC_KEY}
+    private_key: ${env.CONTROLLER_PRIVATE_KEY}
+  seun_swap:
+    contract_file_id: ${env.SEUN_SWAP_CONTRACT_FILE_ID}
+    contract_id: ${env.SEUN_SWAP_CONTRACT_ID}
+
+encryptor:
+  algorithm: ${env.ALGORITHM}
+  secret: ${env.SECRET}

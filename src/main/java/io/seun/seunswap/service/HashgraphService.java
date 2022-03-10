@@ -1,7 +1,6 @@
 package io.seun.seunswap.service;
 
 import com.hedera.hashgraph.sdk.*;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.seun.seunswap.model.Account;
 import io.seun.seunswap.model.SeunSwapToken;
 import io.seun.seunswap.repository.AccountRepository;
@@ -13,6 +12,7 @@ import io.seun.seunswap.responses.ListTokenResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +25,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class HashgraphService {
 
-    public static AccountId CONTROLLER_ID = AccountId.fromString(Dotenv.load().get("CONTROLLER_ID"));
-    public static PublicKey CONTROLLER_PUBLIC_KEY = PublicKey.fromString(Dotenv.load().get("CONTROLLER_PUBLIC_KEY"));
-    public static PrivateKey CONTROLLER_PRIVATE_KEY = PrivateKey.fromString(Dotenv.load().get("CONTROLLER_PRIVATE_KEY"));
+    @Value("{hedera.controller.account_id}")
+    private static String CONTROLLER_ID_Str;
 
-    public static ContractId SEUN_SWAP_CONTRACT_ID = ContractId.fromString(Dotenv.load().get("SEUN_SWAP_CONTRACT_ID"));
+    @Value("{hedera.controller.private_key}")
+    private static String CONTROLLER_PRK_Str;
+
+    @Value("{hedera.seunswap.contract_id}")
+    private static String CONTRACT_ID_Str;
+
+    public static AccountId CONTROLLER_ID = AccountId.fromString(CONTROLLER_ID_Str);
+
+    public static PrivateKey CONTROLLER_PRIVATE_KEY = PrivateKey.fromString(CONTROLLER_PRK_Str);
+
+    public static ContractId SEUN_SWAP_CONTRACT_ID = ContractId.fromString(CONTRACT_ID_Str);
 
     private final AccountRepository accountRepository;
+
     private final TokenRepository tokenRepository;
 
 

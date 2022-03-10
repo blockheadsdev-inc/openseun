@@ -1,7 +1,7 @@
 package io.seun.seunswap.security;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
@@ -14,8 +14,11 @@ import java.util.Base64;
 @Component
 public class FieldEncryptor implements AttributeConverter<String, String> {
 
-    private final String ENCRYPTION_ALGORITHM = Dotenv.load().get("ALGORITHM");
-    private final String ENCRYPTION_KEY = Dotenv.load().get("SECRET");
+    @Value("${encryptor.algorithm}")
+    String ENCRYPTION_ALGORITHM;
+
+    @Value("${encryptor.secret}")
+    String ENCRYPTION_KEY;
 
     private final Key key;
 
