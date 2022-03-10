@@ -1,12 +1,12 @@
 package io.seun.seunswap.security;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import jakarta.persistence.AttributeConverter;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.persistence.AttributeConverter;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;

@@ -1,5 +1,6 @@
 package io.seun.seunswap.configuration;
 
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
@@ -15,9 +16,8 @@ public class OpenAPIConfiguration {
                 .info(
                         new Info()
                                 .title("SEUNSwap API Documentation")
-                                .version("v1")
+                                .version("v3")
                                 .description("SEUNswap is an open source project, implementing an automated exchange for Hedera-based fungible tokens. It currently allows users to list these tokens and provide their prices.")
-                                .termsOfService("")
                                 .license(
                                         new License()
                                                 .name("GNU General Public License")

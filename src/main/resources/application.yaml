@@ -20,5 +20,4 @@ spring:
       show-sql: true
 springdoc:
   swagger-ui:
-    enabled: true
     path: /docs
