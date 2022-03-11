@@ -6,6 +6,8 @@ services:
     build:
       context: .
     container_name: seunswap
+    ports:
+      - "8100:8100"
     depends_on:
       - db
     environment:
