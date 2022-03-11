@@ -14,10 +14,8 @@ import java.util.Base64;
 @Component
 public class FieldEncryptor implements AttributeConverter<String, String> {
 
-    @Value("${encryptor.algorithm}")
     private String ENCRYPTION_ALGORITHM = "AES";
 
-    @Value("${encryptor.secret}")
     private String ENCRYPTION_KEY = "#Xvc#P6CdLA$uqxK";
 
     private final Key key;

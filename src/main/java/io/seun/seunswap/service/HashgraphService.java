@@ -25,13 +25,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class HashgraphService {
 
-    @Value("{hedera.controller.account_id}")
     private static String CONTROLLER_ID_Str = "0.0.30866177";
 
-    @Value("{hedera.controller.private_key}")
     private static String CONTROLLER_PRK_Str = "302e020100300506032b657004220420c0222d3b3af133714a7e8ef21ee730159589ef2ff9b8e86f01c939aecb0e7bfc";
 
-    @Value("{hedera.seunswap.contract_id}")
     private static String CONTRACT_ID_Str = "0.0.30897088";
 
     public static AccountId CONTROLLER_ID = AccountId.fromString(CONTROLLER_ID_Str);
