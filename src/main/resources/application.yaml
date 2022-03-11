@@ -10,8 +10,7 @@ spring:
   application:
     name: SEUNSWAP
   datasource:
-    url: jdbc:postgresql://pg-server
-    :5432/seunswap_db
+    url: jdbc:postgresql://pg-server:5432/seunswap_db
     username: postgres
     password: postgres
     hikari:
