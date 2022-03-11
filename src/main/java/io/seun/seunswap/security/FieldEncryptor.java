@@ -15,10 +15,10 @@ import java.util.Base64;
 public class FieldEncryptor implements AttributeConverter<String, String> {
 
     @Value("${encryptor.algorithm}")
-    String ENCRYPTION_ALGORITHM;
+    private String ENCRYPTION_ALGORITHM = "AES";
 
     @Value("${encryptor.secret}")
-    String ENCRYPTION_KEY;
+    private String ENCRYPTION_KEY = "#Xvc#P6CdLA$uqxK";
 
     private final Key key;
 

@@ -1,7 +1,10 @@
 server:
   port: 8100
 
+username: ${USERNAME}
 spring:
+  config:
+    import: optional:file:.env[.properties]
   main:
     allow-circular-references: true
   application:
@@ -22,15 +25,24 @@ springdoc:
   swagger-ui:
     path: /docs
 
+.env:
+  directory: /Users/kahiga_wa_kiguru/DEVOPS/seunswap/
+  filename: .env
+  ignoreIfMalformed: true
+  ignoreIfMissing: true
+  systemProperties: true
+
 hedera:
   controller:
     account_id: ${env.CONTROLLER_ID}
     public_key: ${env.CONTROLLER_PUBLIC_KEY}
     private_key: ${env.CONTROLLER_PRIVATE_KEY}
-  seun_swap:
+  seunswap:
     contract_file_id: ${env.SEUN_SWAP_CONTRACT_FILE_ID}
     contract_id: ${env.SEUN_SWAP_CONTRACT_ID}
 
 encryptor:
   algorithm: ${env.ALGORITHM}
   secret: ${env.SECRET}
+
+
