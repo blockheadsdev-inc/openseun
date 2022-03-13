@@ -1,4 +1,4 @@
-FROM maven:3.6.0-jdk-11-slim AS build
+FROM maven:3.8.4-openjdk-17-slim AS build
 COPY src /src
 COPY pom.xml pom.xml
 RUN mvn -f pom.xml clean package
