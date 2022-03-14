@@ -1,6 +1,5 @@
 package io.seunwater.seunswap.controller;
 
-import io.seun.seunswap.requests.*;
 import io.seunwater.seunswap.responses.CreateKeyStoreResponse;
 import io.seunwater.seunswap.responses.FetchTokenBalanceResponse;
 import io.seunwater.seunswap.responses.FetchTokenPriceResponse;
