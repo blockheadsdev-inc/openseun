@@ -7,7 +7,7 @@ services:
       context: .
     container_name: seunswap
     ports:
-      - "8100:8100"
+      - "8200:8200"
     depends_on:
       - db
     environment:
