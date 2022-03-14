@@ -1,0 +1,23 @@
+server:
+  port: 8200
+
+spring:
+  application:
+    name: OpenSEUN
+  main:
+    allow-circular-references: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/openseun_db
+    username: postgres
+    password: postgres
+    hikari:
+      max-lifetime: 1800000
+      idle-timeout: 600000
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+springdoc:
+  swagger-ui:
+    path: /docs
