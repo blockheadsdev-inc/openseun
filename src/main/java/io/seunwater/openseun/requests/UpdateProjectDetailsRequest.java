@@ -1,24 +1,20 @@
-package io.seunwater.openseun.model;
+package io.seunwater.openseun.requests;
 
 import io.seunwater.openseun.common.ProjectCategory;
-import io.seunwater.openseun.common.ProjectStatus;
 import io.seunwater.openseun.common.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Project {
+public class UpdateProjectDetailsRequest {
 
-    @Id
+
     private UUID projectId;
 
     private String name;
@@ -32,7 +28,5 @@ public class Project {
     private ProjectCategory category;
 
     private ProjectType type;
-
-    private ProjectStatus status;
 
 }
