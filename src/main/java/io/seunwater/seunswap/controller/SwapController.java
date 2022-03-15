@@ -7,6 +7,7 @@ import io.seunwater.seunswap.responses.ListTokenResponse;
 import io.seunwater.seunswap.service.HashgraphService;
 import io.seunwater.seunswap.requests.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.math.BigInteger;
 @RestController
 @RequestMapping("/seunswap/testnet")
 @RequiredArgsConstructor
+@Tag(name = "SEUNswap API", description = "Use this API to access SEUNswap Functionality")
 public class SwapController {
 
     private final HashgraphService hashgraphService;
