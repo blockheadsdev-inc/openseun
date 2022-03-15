@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -18,6 +19,14 @@ public class Investor {
 
     @Id
     private UUID investorId;
+
+    private UUID walletId;
+
+    private String name;
+
+    private String location;
+
+    private BigDecimal totalInvestments;
 
     private InvestorCategory category;
 
