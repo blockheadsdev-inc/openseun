@@ -19,7 +19,7 @@ public class ListProjectRequest {
 
     private String location;
 
-    private BigDecimal estimatedReductions;
+    private Double estimatedReductions;
 
     private ProjectCategory category;
 

@@ -13,4 +13,5 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
     List<Project> findByStatus(ProjectStatus status);
 
+
 }

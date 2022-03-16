@@ -19,6 +19,8 @@ public class Wallet {
     @Id
     private UUID walletId;
 
+    private UUID ownerId;
+
     private String accountId;
 
     private String publicKey;

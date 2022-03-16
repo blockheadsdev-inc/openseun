@@ -1,6 +1,7 @@
 package io.seunwater.openseun.service;
 
 import io.seunwater.openseun.common.ProjectStatus;
+import io.seunwater.openseun.common.WalletStatus;
 import io.seunwater.openseun.model.Project;
 import io.seunwater.openseun.repository.ProjectRepository;
 import io.seunwater.openseun.requests.*;
@@ -19,33 +20,44 @@ public class ProjectService {
 
 
     public ListProjectResponse listProject(ListProjectRequest request){
+
         Project project = projectRepository
                 .save(
                         new Project(
                                 UUID.randomUUID(),
+                                null,
                                 request.getName(),
                                 request.getDescription(),
                                 request.getLocation(),
                                 request.getEstimatedReductions(),
+                                0.0,
                                 request.getCategory(),
                                 request.getType(),
-                                ProjectStatus.ACTIVE
+                                ProjectStatus.ACTIVE,
+                                WalletStatus.INACTIVE
                         ));
 
-        return new ListProjectResponse(project.getProjectId(), project.getName(), project.getStatus());
+        return
+                new ListProjectResponse(
+                        project.getProjectId(),
+                        project.getName(),
+                        project.getProjectStatus(),
+                        project.getWalletStatus(),
+                        project.getBenefitsReceived());
+
     }
 
     public void activateProject(ActivateProjectRequest request){
 
         Project project = projectRepository.findById(request.getProjectId()).get();
-        project.setStatus(ProjectStatus.ACTIVE);
+        project.setProjectStatus(ProjectStatus.ACTIVE);
         projectRepository.save(project);
 
     }
 
     public void deactivateProject(DeactivateProjectRequest request){
         Project project = projectRepository.findById(request.getProjectId()).get();
-        project.setStatus(ProjectStatus.INACTIVE);
+        project.setProjectStatus(ProjectStatus.INACTIVE);
         projectRepository.save(project);
     }
 
@@ -70,6 +82,18 @@ public class ProjectService {
 
     public List<Project> fetchAllProjects(){
         return projectRepository.findByStatus(ProjectStatus.ACTIVE);
+    }
+
+    public Project getProject(UUID projectId){
+        return projectRepository.findById(projectId).get();
+    }
+
+    public void saveProject(Project project){
+        projectRepository.save(project);
+    }
+
+    public boolean validateProject(UUID projectId){
+        return projectRepository.findById(projectId).isPresent();
     }
 
 }

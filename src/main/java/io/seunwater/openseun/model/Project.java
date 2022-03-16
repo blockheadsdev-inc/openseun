@@ -3,6 +3,7 @@ package io.seunwater.openseun.model;
 import io.seunwater.openseun.common.ProjectCategory;
 import io.seunwater.openseun.common.ProjectStatus;
 import io.seunwater.openseun.common.ProjectType;
+import io.seunwater.openseun.common.WalletStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,18 +22,24 @@ public class Project {
     @Id
     private UUID projectId;
 
+    private UUID walletId;
+
     private String name;
 
     private String description;
 
     private String location;
 
-    private BigDecimal estimatedReductions;
+    private Double estimatedReductions;
+
+    private Double benefitsReceived;
 
     private ProjectCategory category;
 
     private ProjectType type;
 
-    private ProjectStatus status;
+    private ProjectStatus projectStatus;
+
+    private WalletStatus walletStatus;
 
 }

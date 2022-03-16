@@ -14,4 +14,15 @@ public class WalletController {
 
     private final WalletService walletService;
 
+//    connect investor wallet
+//    connect project wallet
+
+//    fetch investor wallet
+//    fetch investor wallets
+
+//    fetch project wallet
+//    fetch project wallets
+
+//    credit wallet
+
 }

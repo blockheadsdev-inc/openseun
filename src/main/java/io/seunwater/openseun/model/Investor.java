@@ -2,6 +2,7 @@ package io.seunwater.openseun.model;
 
 import io.seunwater.openseun.common.InvestorCategory;
 import io.seunwater.openseun.common.ProjectCategory;
+import io.seunwater.openseun.common.WalletStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,8 @@ public class Investor {
     private BigDecimal totalInvestments;
 
     private InvestorCategory category;
+
+    private WalletStatus walletStatus;
+
 
 }

@@ -1,5 +1,6 @@
 package io.seunwater.openseun.controller;
 
+import io.seunwater.openseun.service.InvestorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,4 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Investor API", description = "Use this endpoint to access investor functionality.")
 public class InvestorController {
+
+    private final InvestorService investorService;
+
+//    Add investor
 }
