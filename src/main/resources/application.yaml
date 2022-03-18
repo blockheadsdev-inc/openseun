@@ -7,7 +7,7 @@ spring:
   main:
     allow-circular-references: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/openseun_db
+    url: jdbc:postgresql://opg-server:5432/openseun_db
     username: postgres
     password: postgres
     hikari:

@@ -5,21 +5,21 @@ services:
     image: 'kaspir/openseun:latest'
     build:
       context: .
-    container_name: seunswap
+    container_name: openseun
     ports:
       - "8200:8200"
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://pg-server:5432/openseun_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://opg-server:5432/openseun_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
   db:
     image: 'postgres:14.0-alpine'
-    container_name: pg-server
+    container_name: opg-server
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=seunswap_db
+      - POSTGRES_DB=openseun_db
