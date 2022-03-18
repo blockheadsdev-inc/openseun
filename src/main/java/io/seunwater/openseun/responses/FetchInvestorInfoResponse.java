@@ -1,24 +1,16 @@
-package io.seunwater.openseun.model;
+package io.seunwater.openseun.responses;
 
 import io.seunwater.openseun.common.InvestorCategory;
-import io.seunwater.openseun.common.ProjectCategory;
 import io.seunwater.openseun.common.WalletStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-@Entity
-public class Investor {
+public class FetchInvestorInfoResponse {
 
-    @Id
     private UUID investorId;
 
     private UUID walletId;
@@ -32,6 +24,5 @@ public class Investor {
     private InvestorCategory category;
 
     private WalletStatus walletStatus;
-
 
 }

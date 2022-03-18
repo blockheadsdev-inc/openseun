@@ -17,6 +17,7 @@ import java.util.UUID;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final HashgraphService hashgraphService;
 
 
     public ListProjectResponse listProject(ListProjectRequest request){
@@ -36,6 +37,7 @@ public class ProjectService {
                                 ProjectStatus.ACTIVE,
                                 WalletStatus.INACTIVE
                         ));
+
 
         return
                 new ListProjectResponse(
@@ -81,7 +83,7 @@ public class ProjectService {
     }
 
     public List<Project> fetchAllProjects(){
-        return projectRepository.findByStatus(ProjectStatus.ACTIVE);
+        return projectRepository.findByProjectStatus(ProjectStatus.ACTIVE);
     }
 
     public Project getProject(UUID projectId){

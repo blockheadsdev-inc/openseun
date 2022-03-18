@@ -1,9 +1,13 @@
 package io.seunwater.openseun.service;
 
+import com.hedera.hashgraph.sdk.AccountId;
+import com.hedera.hashgraph.sdk.PrivateKey;
+import com.hedera.hashgraph.sdk.PublicKey;
 import io.seunwater.openseun.common.WalletStatus;
 import io.seunwater.openseun.model.Investor;
 import io.seunwater.openseun.model.Project;
 import io.seunwater.openseun.model.Wallet;
+import io.seunwater.openseun.repository.InvestorRepository;
 import io.seunwater.openseun.repository.WalletRepository;
 import io.seunwater.openseun.requests.*;
 import io.seunwater.openseun.responses.ConnectInvestorWalletResponse;
@@ -11,6 +15,7 @@ import io.seunwater.openseun.responses.ConnectProjectWalletResponse;
 import io.seunwater.openseun.responses.FetchInvestorWalletResponse;
 import io.seunwater.openseun.responses.FetchProjectWalletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +27,9 @@ import java.util.UUID;
 public class WalletService {
 
     private final WalletRepository walletRepository;
-    private final InvestorService investorService;
+    private final InvestorRepository investorRepository;
     private final ProjectService projectService;
+    private final HashgraphService hashgraphService;
 
 //    connect investor wallet
     public ConnectInvestorWalletResponse connectInvestorWallet(ConnectInvestorWalletRequest request){
@@ -38,26 +44,27 @@ public class WalletService {
 
         walletRepository.save(wallet);
 
-        Investor investor = investorService.getInvestor(request.getInvestorId());
+        Investor investor = investorRepository.findById(request.getInvestorId()).get();
 
         investor.setWalletId(wallet.getWalletId());
         investor.setWalletStatus(WalletStatus.ACTIVE);
 
-        investorService.saveInvestor(investor);
+        investorRepository.save(investor);
 
         return new ConnectInvestorWalletResponse(wallet.getOwnerId(), wallet.getWalletId(), investor.getWalletStatus());
     }
 
 //    disconnect investor wallet
     public void disconnectInvestorWallet(DisconnectInvestorWalletRequest request){
-        Investor investor = investorService.getInvestor(request.getInvestorId());
+
+        Investor investor = investorRepository.findById(request.getInvestorId()).get();
 
         investor.setWalletId(null);
         investor.setWalletStatus(WalletStatus.INACTIVE);
 
         walletRepository.deleteById(request.getWalletId());
 
-        investorService.saveInvestor(investor);
+        investorRepository.save(investor);
 
     }
 
@@ -65,6 +72,7 @@ public class WalletService {
     public ConnectProjectWalletResponse connectProjectWallet(ConnectProjectWalletRequest request){
 
         Wallet wallet = new Wallet(
+
                 UUID.randomUUID(),
                 request.getProjectId(),
                 request.getAccountId(),
@@ -73,6 +81,9 @@ public class WalletService {
                 request.getWalletName());
 
         walletRepository.save(wallet);
+
+        hashgraphService.associateProjectWithBond(AccountId.fromString(wallet.getAccountId()), PublicKey.fromString(wallet.getPublicKey()), PrivateKey.fromString(wallet.getPrivateKey()));
+
 
         Project project = projectService.getProject(request.getProjectId());
 
@@ -101,7 +112,7 @@ public class WalletService {
 
 //    fetch investor wallet
     public FetchInvestorWalletResponse fetchInvestorWallet(FetchInvestorWalletRequest request){
-        if (investorService.validateInvestor(request.getInvestorId())) {
+        if (investorRepository.findById(request.getInvestorId()).isPresent()) {
             Wallet wallet = walletRepository.findById(request.getWalletId()).get();
             return new FetchInvestorWalletResponse(wallet.getOwnerId(), wallet.getWalletId(), wallet.getWalletName(), wallet.getPublicKey());
         }
@@ -111,7 +122,7 @@ public class WalletService {
 //    fetch investor wallets
     public FetchAllInvestorWalletsResponse fetchAllInvestorWallets(FetchAllInvestorWalletsRequest request){
 
-        if (investorService.validateInvestor(request.getInvestorId())){
+        if (investorRepository.findById(request.getInvestorId()).isPresent()){
 
             List<Wallet> wallets = walletRepository.findByOwnerId(request.getInvestorId());
 
@@ -158,11 +169,32 @@ public class WalletService {
         return null;
     }
 
-//    credit wallet
-    public void creditWallet(){}
+    @SneakyThrows
+    public void generateCertificate(UUID walletId){
 
-//    charge wallet
-    public void chargeWallet(){}
+        Wallet wallet = walletRepository.findById(walletId).get();
+
+        hashgraphService.generateCertificateNFT(
+                AccountId.fromString(wallet.getAccountId()),
+                PrivateKey.fromString(wallet.getPrivateKey()),
+                PublicKey.fromString(wallet.getPublicKey()));
+
+
+    }
+
+    public void transferBonds(UUID investorWalletId, UUID projectWalletId, long amount){
+
+        Wallet investor_wallet = walletRepository.findById(investorWalletId).get();
+        Wallet project_wallet = walletRepository.findById(projectWalletId).get();
+
+        hashgraphService.transferBondFromInvestorToProject(
+                AccountId.fromString(investor_wallet.getAccountId()),
+                PrivateKey.fromString(investor_wallet.getPrivateKey()),
+                AccountId.fromString(project_wallet.getAccountId()),
+                PrivateKey.fromString(project_wallet.getPrivateKey()),
+                amount);
+
+    }
 
 
 }
