@@ -3,16 +3,12 @@ package io.seunwater.openseun.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hedera.hashgraph.sdk.*;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.seunwater.openseun.metadata.CertificateMetadata;
 import io.seunwater.openseun.metadata.Localization;
-import io.seunwater.openseun.metadata.Name;
-import io.seunwater.openseun.metadata.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -49,10 +45,10 @@ public class HashgraphService {
 //    Transfer H20B from Investor to Project
 //    Transfer Certificate NFT to Investor
 
-    private final AccountId OPERATOR_ID = AccountId.fromString(Dotenv.load().get("OPERATOR_ID"));
-    private final TokenId H20B_ID = TokenId.fromString(Dotenv.load().get("H20B_ID"));
-    private final ContractId SEUN_SWAP_CONTRACT_ID = ContractId.fromString(Dotenv.load().get("SEUN_SWAP_CONTRACT_ID"));
-    private final String CERTIFICATE_IMAGE_URL = Dotenv.load().get("CERTIFICATE_IMAGE_URL");
+    private final AccountId OPERATOR_ID = AccountId.fromString("0.0.14410");
+    private final TokenId H20B_ID = TokenId.fromString("0.0.30861311");
+    private final ContractId SEUN_SWAP_CONTRACT_ID = ContractId.fromString("0.0.30897088");
+    private final String CERTIFICATE_IMAGE_URL = "";
 
 
     @SneakyThrows
@@ -81,7 +77,7 @@ public class HashgraphService {
 
         Client investorClient = Client.forTestnet().setOperator(investorId, pk);
 
-        TokenId bondId = TokenId.fromString(Dotenv.load().get("BOND_ID"));
+        TokenId bondId = H20B_ID;
 
         ArrayList<CustomFee> fees = new ArrayList<>();
 

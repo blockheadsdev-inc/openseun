@@ -1,6 +1,5 @@
 package io.seunwater.openseun.service;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.seunwater.openseun.common.WalletStatus;
 import io.seunwater.openseun.model.Investor;
 import io.seunwater.openseun.model.OffsetOption;
@@ -29,7 +28,7 @@ public class InvestorService {
 
     private final WalletService walletService;
 
-
+    private final Double OFFSET_PRICE_USD = Double.valueOf(30);
 
     public AddInvestorResponse addInvestor(AddInvestorRequest request){
 
@@ -81,7 +80,7 @@ public class InvestorService {
 //    calculate offset
     public ArrayList<OffsetOption> purchaseCarbonCredits(PurchaseCarbonCreditsRequest request){
 
-        Double price = Double.valueOf(Dotenv.load().get("CARBON_OFFSET_PRICE_PER_TONNE_USD"));
+        Double price = OFFSET_PRICE_USD;
 
         List<Project> projects = projectService.fetchAllProjects();
 
