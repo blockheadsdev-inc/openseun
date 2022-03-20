@@ -2,7 +2,7 @@ version: '2'
 
 services:
   app:
-    image: 'kaspir/seunswap:latest'
+    image: 'seunswap-v1:latest'
     build:
       context: .
     container_name: seunswap
