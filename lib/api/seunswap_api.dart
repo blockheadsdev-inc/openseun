@@ -91,8 +91,8 @@ class SeunSwapApi {
     var _response = await _client.post(Uri.parse(_url),
         body: """
         {
-          "walletId": $_walletId,
-          "walletTokenId": $_walletTokenId,
+          "walletId": "$_walletId",
+          "walletTokenId": "$_walletTokenId",
           "newPrice": $_newPrice
         }
       """,
@@ -113,8 +113,8 @@ class SeunSwapApi {
     var _response = await _client.post(Uri.parse(_url),
         body: """
         {
-          "walletId": $_walletId,
-          "walletTokenId": $_walletTokenId,
+          "walletId": "$_walletId",
+          "walletTokenId": "$_walletTokenId",
           "amount": $_amount
         }
       """,
@@ -125,15 +125,15 @@ class SeunSwapApi {
     return _res;
   }
 
-  Future<Map> purchaseToken(
+  Future<String> purchaseToken(
     String _walletId,
     String _walletTokenId,
     int _quantity,
   ) async {
     String _body = """
         {
-          "walletId": $_walletId,
-          "walletTokenId": $_walletTokenId,
+          "walletId": "$_walletId",
+          "walletTokenId": "$_walletTokenId",
           "quantity": $_quantity
         }
       """;
@@ -143,9 +143,9 @@ class SeunSwapApi {
     var _response =
         await _client.post(Uri.parse(_url), body: _body, headers: _headers);
 
-    var _res = json.decode(_response.body);
-    print(_res);
-    return _res;
+    // var _res = json.decode(_response.body);
+    print(_response.body);
+    return _response.body;
   }
 
   Future<Map> fetchTokenPrice(
