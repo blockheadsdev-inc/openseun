@@ -23,6 +23,8 @@ public class SeunSwapToken {
 
     private String tokenId;
 
+    private String tokenName;
+
     private BigInteger price;
 
     private BigInteger balance;

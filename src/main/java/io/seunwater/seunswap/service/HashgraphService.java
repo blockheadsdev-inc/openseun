@@ -30,9 +30,17 @@ public class HashgraphService {
 
     private static String CONTRACT_ID_Str = "0.0.30897088";
 
+    private static String OPERATOR_ID_Str = "0.0.14410";
+
+    private static String OPERATOR_PRK_Str = "302e020100300506032b657004220420c2b949ec8f503faaa1533e20d29378a67a0e35e46affef9d296a84354c299367";
+
     public static AccountId CONTROLLER_ID = AccountId.fromString(CONTROLLER_ID_Str);
 
+    public static AccountId OPERATOR_ID = AccountId.fromString(OPERATOR_ID_Str);
+
     public static PrivateKey CONTROLLER_PRIVATE_KEY = PrivateKey.fromString(CONTROLLER_PRK_Str);
+
+    public static PrivateKey OPERATOR_PRIVATE_KEY = PrivateKey.fromString(OPERATOR_PRK_Str);
 
     public static ContractId SEUN_SWAP_CONTRACT_ID = ContractId.fromString(CONTRACT_ID_Str);
 
@@ -105,6 +113,8 @@ public class HashgraphService {
 //        transfer Tokens to controller
         sellToken(walletId, tokenId, amount);
 
+        String name = queryTokenInfo(TokenId.fromString(tokenId));
+
 //        list token
         Status status = new ContractExecuteTransaction()
                 .setGas(2_000_000)
@@ -133,6 +143,7 @@ public class HashgraphService {
                                     UUID.randomUUID(),
                                     account.getWalletId(),
                                     tokenId,
+                                    name,
                                     Hbar
                                             .fromTinybars(priceInTinyBars)
                                             .getValue()
@@ -379,11 +390,34 @@ public class HashgraphService {
     }
 
     public List<SeunSwapToken> getListedTokens(){
+
+        for (SeunSwapToken tk : tokenRepository.findAll()){
+            if (tk.getTokenName() == null ||  tk.getTokenName().equals("")){
+                tk.setTokenName(queryTokenInfo(TokenId.fromString(tk.getTokenId())));
+            }
+            tokenRepository.save(tk);
+        }
+
         return tokenRepository.findAll();
+
     }
 
     public void deleteListedToken(UUID walletTokenId){
         tokenRepository.deleteById(walletTokenId);
+    }
+
+    @Async
+    @SneakyThrows
+    public String queryTokenInfo(TokenId tokenId){
+
+        Client client = Client.forTestnet().setOperator(OPERATOR_ID, OPERATOR_PRIVATE_KEY);
+
+        return new TokenInfoQuery()
+                .setTokenId(tokenId)
+                .setMaxQueryPayment(new Hbar(2))
+                .execute(client)
+                .name;
+
     }
 
 }

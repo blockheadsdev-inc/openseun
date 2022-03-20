@@ -48,7 +48,7 @@ public class SwapController {
 
         }
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Request Rejected");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request Rejected");
 
     }
 
