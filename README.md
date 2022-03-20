@@ -2,7 +2,7 @@
 
 ### Repository Structure
 * SEUNswap Backend - [SEUNswap-production Branch](https://github.com/blockheads-dev/openseun/tree/SEUNswap-production)
-* SEUNswap Frontend - []()
+* SEUNswap Frontend - [seunswap-frontend-development Branch](https://github.com/blockheads-dev/openseun/tree/seunswap-frontend-development)
 * OpenSEUN Backend - [OpenSEUN-development Branch](https://github.com/blockheads-dev/openseun/tree/OpenSEUN-development)
 * OpenSEUN Frontend - []()
 
