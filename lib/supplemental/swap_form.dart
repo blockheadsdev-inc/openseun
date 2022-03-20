@@ -162,9 +162,13 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
         });
   }
 
-  void _swapSubmit() {
+  void _swapSubmit(String _walletId) {
     if (_hbarFieldPosition < 1) {
-      _seunSwapApi.purchaseToken(_tokenId.text, tokenWalletId, 0);
+      _seunSwapApi.purchaseToken(
+        _walletId,
+        tokenWalletId,
+        int.parse(_amount1.text),
+      );
     } else {}
   }
 
@@ -182,7 +186,7 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
     if (!_isWalletId) {
       _firstStartDialog();
     } else {
-      _swapSubmit();
+      _swapSubmit(_data!);
       // if (_res['status'] != 500) {
       //   _displaySnackMessage('Your Token Id is: ${_res['walletTokenId']}');
       // } else {
@@ -190,6 +194,11 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
       //       'Something went wrong. status: ${_res['status']}  error: ${_res['error']}');
       // }
     }
+  }
+
+  double hbarToTinyBar(double _hbar) {
+    double _r = _hbar * 100000000;
+    return _r;
   }
 
   void _displaySnackMessage(String _message) {

@@ -148,14 +148,22 @@ class _ListFetchedCoinsState extends State<ListFetchedCoins>
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                "Token ID:",
-                                style: TextStyle(fontSize: 16),
-                              ),
                               Text(
-                                "${snapshot.data[index].tokenId}",
-                                style: const TextStyle(fontSize: 20),
+                                snapshot.data[index].tokenName,
+                                style: TextStyle(fontSize: 20),
                               ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "ID:",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    "${snapshot.data[index].tokenId}",
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                           subtitle: const Text(''

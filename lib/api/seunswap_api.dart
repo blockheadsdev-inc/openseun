@@ -130,17 +130,18 @@ class SeunSwapApi {
     String _walletTokenId,
     int _quantity,
   ) async {
-    String _endpoint = '/seunswap/$_network/purchaseToken';
-    String _url = "http://$_domain:$_port$_endpoint";
-    var _response = await _client.post(Uri.parse(_url),
-        body: """
+    String _body = """
         {
           "walletId": $_walletId,
           "walletTokenId": $_walletTokenId,
           "quantity": $_quantity
         }
-      """,
-        headers: _headers);
+      """;
+    print(_body);
+    String _endpoint = '/seunswap/$_network/purchaseToken';
+    String _url = "http://$_domain:$_port$_endpoint";
+    var _response =
+        await _client.post(Uri.parse(_url), body: _body, headers: _headers);
 
     var _res = json.decode(_response.body);
     print(_res);
@@ -192,12 +193,12 @@ class SeunSwapApi {
     var _response = await _client.get(Uri.parse(_url), headers: _headers);
 
     var _jsonData = json.decode(_response.body);
-    // print(_jsonData);
+    print(_jsonData);
     List<Token> tokens = [];
 
     for (var t in _jsonData) {
       Token token = Token(t["walletTokenId"], t["walletId"], t["tokenId"],
-          t["price"], t["balance"]);
+          t["tokenName"], t["price"], t["balance"]);
       // print("Token: $token");
       tokens.add(token);
     }
@@ -213,19 +214,19 @@ class SeunSwapApi {
     var _response = await _client.get(Uri.parse(_url), headers: _headers);
 
     var _jsonData = json.decode(_response.body);
-    // print(_jsonData);
+    print(_jsonData);
     List<Token> tokens = [];
 
     for (var t in _jsonData) {
       if (_walletFromLocal == t["walletId"]) {
         Token token = Token(t["walletTokenId"], t["walletId"], t["tokenId"],
-            t["price"], t["balance"]);
+            t["tokenName"], t["price"], t["balance"]);
         // print("Token: $token");
         tokens.add(token);
       } else {}
     }
 
-    // print("Owned Tokens: $tokens");
+    print("Owned Tokens: $tokens");
     return tokens;
   }
 }
