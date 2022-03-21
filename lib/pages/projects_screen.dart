@@ -32,14 +32,16 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 height: 50,
               ),
               ProjectTileCard(
-                title: "A green project",
+                title: "Green Africa- Efficient Cook Stove Replacement",
                 description:
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                    "A project in Africa that benefits 200,000 people in Malawi. The team replaced traditional three-stone cooking fires with fuel efficient stoves. This reduces greenhouse gas emissions when boiling water.",
+                image: Image.asset('assets/malawi.jpg'),
               ),
               ProjectTileCard(
-                title: "A cleaner Project",
+                title: "WaterClear Cambodia",
                 description:
-                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+                    "This project encourages communities to utilize filters to purify their water sources rather than the usual fuel intensive wood or charcoal burning stoves.",
+                image: Image.asset('assets/cambodia.jpg'),
               ),
               SizedBox(
                 height: 20,

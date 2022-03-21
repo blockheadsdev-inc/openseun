@@ -63,6 +63,8 @@ flutter:
   assets:
     - assets/openseun_large_logo.jpg
     - assets/placeholder.jpg
+    - assets/malawi.jpg
+    - assets/cambodia.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

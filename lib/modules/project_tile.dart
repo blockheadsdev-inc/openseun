@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class ProjectTileCard extends StatefulWidget {
   final String description;
   final String title;
-  const ProjectTileCard({
-    Key? key,
-    required this.description,
-    required this.title,
-  }) : super(key: key);
+  final Image image;
+  const ProjectTileCard(
+      {Key? key,
+      required this.description,
+      required this.title,
+      required this.image})
+      : super(key: key);
 
   @override
   State<ProjectTileCard> createState() => _ProjectTileCardState();
@@ -42,7 +44,7 @@ class _ProjectTileCardState extends State<ProjectTileCard> {
       child: Container(
         color: Colors.white,
         height: 200.0,
-        width: MediaQuery.of(context).size.width - 50,
+        width: MediaQuery.of(context).size.width - 25,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +52,13 @@ class _ProjectTileCardState extends State<ProjectTileCard> {
             Container(
               // color: Colors.red,
               height: 160.0,
-              child: _placeHolderImage,
+              child: ClipRect(
+                  // clipper: ,
+                  child: Align(
+                      // widthFactor: 0.4,
+                      alignment: Alignment.center,
+                      heightFactor: 1.0,
+                      child: widget.image)),
             ),
             Container(
               height: 160,
@@ -61,9 +69,12 @@ class _ProjectTileCardState extends State<ProjectTileCard> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text(
-                      widget.title,
-                      style: TextStyle(color: Colors.green, fontSize: 14),
+                    child: Container(
+                      width: 220,
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(color: Colors.green, fontSize: 12),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -74,8 +85,11 @@ class _ProjectTileCardState extends State<ProjectTileCard> {
                     child: Container(
                         // color: Colors.orange,
                         width: 200,
-                        height: 95,
-                        child: _textPlaceHolder),
+                        height: 86,
+                        child: Text(
+                          widget.description,
+                          style: TextStyle(fontSize: 12),
+                        )),
                   ),
                   SizedBox(
                     height: 0,
