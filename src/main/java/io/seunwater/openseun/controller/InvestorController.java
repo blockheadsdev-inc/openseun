@@ -36,7 +36,7 @@ public class InvestorController {
 
     @GetMapping("/fetchInvestorInfo")
     @Operation(summary = "Use this endpoint to query Investor Information.")
-    public ResponseEntity<FetchInvestorInfoResponse> getInvestorInfo(FetchInvestorInfoRequest request){
+    public ResponseEntity<FetchInvestorInfoResponse> getInvestorInfo(@RequestBody FetchInvestorInfoRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(investorService.getInvestorInfo(request));
     }
 
@@ -49,13 +49,13 @@ public class InvestorController {
 
     @PostMapping("/purchaseCarbonCredits")
     @Operation(summary = "Use this endpoint to start the carbon credit purchase process.")
-    public ResponseEntity<ArrayList<OffsetOption>> purchaseCarbonCredits(PurchaseCarbonCreditsRequest request){
+    public ResponseEntity<ArrayList<OffsetOption>> purchaseCarbonCredits(@RequestBody PurchaseCarbonCreditsRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(investorService.purchaseCarbonCredits(request));
     }
 
     @PostMapping("/chooseOffsetOption")
     @Operation(summary = "Use this endpoint to complete the carbon credit purchase process.")
-    public ResponseEntity<String> chooseOffsetOption(ChooseOffsetProjectRequest request){
+    public ResponseEntity<String> chooseOffsetOption(@RequestBody ChooseOffsetProjectRequest request){
 
         investorService.chooseOffsetOption(request);
 
