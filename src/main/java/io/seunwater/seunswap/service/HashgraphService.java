@@ -179,7 +179,7 @@ public class HashgraphService {
                 .addHbarTransfer(CONTROLLER_ID, amount_payable.negated())
                 .addHbarTransfer(AccountId.fromString(account.getAccountId()), amount_payable)
                 .addTokenTransfer(TokenId.fromString(token.getTokenId()), AccountId.fromString(account.getAccountId()), (-1 * amount.longValue()))
-                .addTokenTransfer(TokenId.fromString(token.getTokenId()), AccountId.fromString(account.getAccountId()),amount.longValue())
+                .addTokenTransfer(TokenId.fromString(token.getTokenId()), CONTROLLER_ID,amount.longValue())
                 .execute(client)
                 .getReceipt(client)
                 .status;
