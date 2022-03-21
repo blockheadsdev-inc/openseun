@@ -104,7 +104,7 @@ public class SwapController {
 
 //    get listed token price
     @Operation(summary = "Use this endpoint to query the Listed Token's price.")
-    @GetMapping("/fetchTokenPrice")
+    @PostMapping("/fetchTokenPrice")
     public ResponseEntity<?> getTokenPrice(@RequestBody FetchTokenPriceRequest request){
 
         if (hashgraphService.verifyWalletId(request.getWalletId())){
@@ -121,7 +121,7 @@ public class SwapController {
 
 //    get controller token balance
     @Operation(summary = "Use this endpoint to query the smart contract's token balance.")
-    @GetMapping("/fetchTokenBalance")
+    @PostMapping("/fetchTokenBalance")
     public ResponseEntity<?> getTokenBalance(@RequestBody FetchTokenBalanceRequest request){
 
         if (hashgraphService.verifyWalletId(request.getWalletId())){
@@ -149,7 +149,7 @@ public class SwapController {
     }
 
     @Operation(summary = "Use this endpoint to delete a Token Listed on SEUNswap.", hidden = true)
-    @DeleteMapping("/deleteListedToken")
+    @PostMapping("/deleteListedToken")
     public ResponseEntity<?> deleteListedToken(@RequestBody DeleteListedTokenRequest request){
 
         hashgraphService.deleteListedToken(request.getWalletTokenId());
