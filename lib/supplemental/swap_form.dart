@@ -145,9 +145,11 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
         double _x1 = double.parse(_s1);
         double _x2 = double.parse(_s2);
         setState(() {
-          _amount1.text = removeDecimalZeroFormat(_x2);
-          _amount2.text = removeDecimalZeroFormat(_x1);
-          _swapIcons();
+          // _amount1.text = removeDecimalZeroFormat(_x2);
+          // _amount2.text = removeDecimalZeroFormat(_x1);
+          _amount1.text = removeDecimalZeroFormat(_x1);
+          _amount2.text = removeDecimalZeroFormat(_x2);
+          // _swapIcons();
           _swapHbarPos();
         });
       }
