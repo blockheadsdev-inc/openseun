@@ -18,11 +18,18 @@ class MenuDrawer extends StatelessWidget {
           children: [
             Container(
               height: 86,
-              color: Colors.lightBlue,
+              color: Colors.blue,
               child: const DrawerHeader(
-                child: Center(child: Text("Menu")),
+                child: Center(
+                    child: Text(
+                  "OpenSEUN",
+                  style: TextStyle(color: Colors.white),
+                )),
                 // decoration: ,
               ),
+            ),
+            SizedBox(
+              height: 10,
             ),
             GestureDetector(
               onTap: () {
