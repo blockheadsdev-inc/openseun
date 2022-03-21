@@ -165,7 +165,7 @@ public class HashgraphService {
         Status status = new TransferTransaction()
                 .addTokenTransfer(H20B_ID, investorId, (-1 * amount))
                 .addTokenTransfer(H20B_ID, projectId, (1 * amount))
-                .addHbarTransfer(investorId, Hbar.fromTinybars(-1 * transfer_value))
+                .addHbarTransfer(investorId, Hbar.fromTinybars((-1 * transfer_value)))
                 .addHbarTransfer(projectId, Hbar.fromTinybars(transfer_value))
                 .signWithOperator(investorClient)
                 .signWithOperator(projectClient)
