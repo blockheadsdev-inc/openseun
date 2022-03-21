@@ -48,6 +48,7 @@ public class InvestorService {
     }
 
     public FetchInvestorInfoResponse getInvestorInfo(FetchInvestorInfoRequest request){
+
         Investor investor = investorRepository.findById(request.getInvestorId()).get();
 
         return new FetchInvestorInfoResponse(
