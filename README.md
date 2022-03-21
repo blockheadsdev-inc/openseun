@@ -4,7 +4,7 @@
 * SEUNswap Backend - [SEUNswap-production Branch](https://github.com/blockheads-dev/openseun/tree/SEUNswap-production)
 * SEUNswap Frontend - [seunswap-frontend-development Branch](https://github.com/blockheads-dev/openseun/tree/seunswap-frontend-development)
 * OpenSEUN Backend - [OpenSEUN-development Branch](https://github.com/blockheads-dev/openseun/tree/OpenSEUN-development)
-* OpenSEUN Frontend - []()
+* OpenSEUN Frontend - [OpenSEUN-frontend-development Branch](https://github.com/blockheads-dev/openseun/tree/OpenSEUN-frontend-development)
 
 ## About this Project
 OpenSEUN is a platform where communities who decide to use energy saving methods to ensure clean water are rewarded with carbon credits. We help communities to access clean water and secure funding by selling carbon offsets as a result of cutting greenhouse gas emissions. Our Open Source software ensures that the data is being recorded accurately and then produces carbon credits.
