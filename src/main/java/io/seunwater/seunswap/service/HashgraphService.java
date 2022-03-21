@@ -28,7 +28,7 @@ public class HashgraphService {
 
     private static String CONTROLLER_PRK_Str = "302e020100300506032b657004220420c0222d3b3af133714a7e8ef21ee730159589ef2ff9b8e86f01c939aecb0e7bfc";
 
-    private static String CONTRACT_ID_Str = "0.0.30897088";
+    private static String CONTRACT_ID_Str = "0.0.33990706";
 
     private static String OPERATOR_ID_Str = "0.0.14410";
 
@@ -167,23 +167,27 @@ public class HashgraphService {
         Account account = accountRepository.findById(walletId).get();
         SeunSwapToken token = tokenRepository.findById(walletTokenId).get();
 
+        Hbar amount_payable = Hbar.from(amount.longValue(), HbarUnit.TINYBAR);
+
         Client client = Client.forTestnet().setOperator(
                 AccountId.fromString(account.getAccountId()),
                 PrivateKey.fromString(account.getPrivateKey()));
 
-        Status status = new ContractExecuteTransaction()
-                .setGas(2_000_000)
-                .setContractId(SEUN_SWAP_CONTRACT_ID)
-                .setFunction(
-                        "tokenPurchase",
-                        new ContractFunctionParameters()
-                                .addAddress(TokenId.fromString(token.getTokenId()).toSolidityAddress())
-                                .addInt64(amount.longValue()))
-                .freezeWith(client)
-                .sign(PrivateKey.fromString(account.getPrivateKey()))
+        System.out.println("Payable :: " + amount_payable );
+
+        Status status = new TransferTransaction()
+                .addHbarTransfer(CONTROLLER_ID, amount_payable.negated())
+                .addHbarTransfer(AccountId.fromString(account.getAccountId()), amount_payable)
+                .addTokenTransfer(TokenId.fromString(token.getTokenId()), AccountId.fromString(account.getAccountId()), (-1 * amount.longValue()))
+                .addTokenTransfer(TokenId.fromString(token.getTokenId()), AccountId.fromString(account.getAccountId()),amount.longValue())
                 .execute(client)
                 .getReceipt(client)
                 .status;
+
+        token.setBalance(token.getBalance().add(amount));
+
+        tokenRepository.save(token);
+
 
         log.info("Token Purchase Tx status :: " + status);
 
@@ -200,16 +204,13 @@ public class HashgraphService {
                 AccountId.fromString(account.getAccountId()),
                 PrivateKey.fromString(account.getPrivateKey()));
 
-        Status status = new ContractExecuteTransaction()
-                .setGas(2_000_000)
-                .setContractId(SEUN_SWAP_CONTRACT_ID)
-                .setFunction(
-                        "tokenPurchase",
-                        new ContractFunctionParameters()
-                                .addAddress(TokenId.fromString(tokenId).toSolidityAddress())
-                                .addInt64(amount.longValue()))
-                .freezeWith(client)
-                .sign(PrivateKey.fromString(account.getPrivateKey()))
+        Hbar amount_payable = Hbar.from(amount.longValue(), HbarUnit.TINYBAR);
+
+        Status status = new TransferTransaction()
+                .addHbarTransfer(CONTROLLER_ID, amount_payable.negated())
+                .addHbarTransfer(AccountId.fromString(account.getAccountId()), amount_payable)
+                .addTokenTransfer(TokenId.fromString(tokenId), AccountId.fromString(account.getAccountId()), (-1 * amount.longValue()))
+                .addTokenTransfer(TokenId.fromString(tokenId), CONTROLLER_ID, amount.longValue())
                 .execute(client)
                 .getReceipt(client)
                 .status;
@@ -230,22 +231,24 @@ public class HashgraphService {
                 .forTestnet()
                 .setOperator(CONTROLLER_ID, CONTROLLER_PRIVATE_KEY);
 
+        Client client = Client.forTestnet().setOperator(AccountId.fromString(account.getAccountId()), PrivateKey.fromString(account.getPrivateKey()));
+
         Hbar amount_payable = Hbar.from(token.getPrice().intValueExact() * quantity, HbarUnit.TINYBAR);
 
-        Status status = new ContractExecuteTransaction()
-                .setGas(2_000_000)
-                .setContractId(SEUN_SWAP_CONTRACT_ID)
-                .setFunction(
-                        "tokenSale",
-                        new ContractFunctionParameters()
-                                .addAddress(TokenId.fromString(token.getTokenId()).toSolidityAddress())
-                                .addInt64(quantity))
-                .setPayableAmount(amount_payable)
-                .freezeWith(controller_client)
-                .sign(CONTROLLER_PRIVATE_KEY)
+        System.out.println("Payable :: " + amount_payable);
+        System.out.println("Payable neg :: " + amount_payable.negated());
+        System.out.println("Quant  :: " + quantity);
+        System.out.println("Quant neg :: " + (-1 * quantity));
+
+        Status status = new TransferTransaction()
+                .addHbarTransfer(CONTROLLER_ID, amount_payable)
+                .addHbarTransfer(AccountId.fromString(account.getAccountId()), amount_payable.negated())
+                .addTokenTransfer(TokenId.fromString(token.getTokenId()), AccountId.fromString(account.getAccountId()),quantity)
+                .addTokenTransfer(TokenId.fromString(token.getTokenId()), CONTROLLER_ID,(-1 * quantity))
+                .signWithOperator(controller_client)
+                .signWithOperator(client)
                 .execute(controller_client)
-                .getReceipt(controller_client)
-                .status;
+                .getReceipt(controller_client).status;
 
         log.info("Token Purchase Tx status :: " + status);
 
@@ -307,8 +310,6 @@ public class HashgraphService {
                 .execute(client)
                 .getUint256(0);
 
-        token.setPrice(tokenPrice);
-
         tokenRepository.save(token);
 
         return new FetchTokenPriceResponse(token.getTokenId(), tokenPrice);
@@ -323,22 +324,11 @@ public class HashgraphService {
 
         SeunSwapToken token = tokenRepository.findById(walletTokenId).get();
 
-        BigInteger tokenBalance = new ContractCallQuery()
-                .setContractId(SEUN_SWAP_CONTRACT_ID)
-                .setGas(1_000_000)
-                .setFunction(
-                        "getTokenBalance",
-                        new ContractFunctionParameters()
-                                .addAddress(TokenId.fromString(token.getTokenId()).toSolidityAddress()))
-                .setMaxQueryPayment(new Hbar(2))
-                .execute(client)
-                .getUint256(0);
 
-        token.setBalance(tokenBalance);
 
         tokenRepository.save(token);
 
-        return new FetchTokenBalanceResponse(token.getTokenId(), tokenBalance);
+        return new FetchTokenBalanceResponse(token.getTokenId(), token.getBalance());
 
     }
 
