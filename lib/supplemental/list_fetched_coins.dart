@@ -41,8 +41,9 @@ class _ListFetchedCoinsState extends State<ListFetchedCoins>
     return _r;
   }
 
-  void _saveTokenOnTap(_tokenId, _tokenWalletId) async {
-    await _dataStorage.saveSelectedToken(_tokenId, _tokenWalletId);
+  void _saveTokenOnTap(_tokenId, _tokenWalletId, _tokenWalletWalletId) async {
+    await _dataStorage.saveSelectedToken(
+        _tokenId, _tokenWalletId, _tokenWalletWalletId);
   }
 
   Widget _buildOwnedList() {
@@ -99,8 +100,10 @@ class _ListFetchedCoinsState extends State<ListFetchedCoins>
                             ],
                           ),
                           onTap: () {
-                            _saveTokenOnTap(snapshot.data[index].tokenId,
-                                snapshot.data[index].walletTokenId);
+                            _saveTokenOnTap(
+                                snapshot.data[index].tokenId,
+                                snapshot.data[index].walletTokenId,
+                                snapshot.data[index].walletId);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                     'Selected Token ID ${snapshot.data[index].tokenId}')));
@@ -182,8 +185,10 @@ class _ListFetchedCoinsState extends State<ListFetchedCoins>
                             ],
                           ),
                           onTap: () {
-                            _saveTokenOnTap(snapshot.data[index].tokenId,
-                                snapshot.data[index].walletTokenId);
+                            _saveTokenOnTap(
+                                snapshot.data[index].tokenId,
+                                snapshot.data[index].walletTokenId,
+                                snapshot.data[index].walletId);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                     'Selected Token ID ${snapshot.data[index].tokenId}')));

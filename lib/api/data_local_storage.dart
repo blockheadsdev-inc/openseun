@@ -62,13 +62,15 @@ class LocalData {
     return doubleValue;
   }
 
-  Future<bool?> saveSelectedToken(
-      String _tokenId, String _tokenWalletId) async {
+  Future<bool?> saveSelectedToken(String _tokenId, String _tokenWalletId,
+      String _tokenWalletWalletId) async {
     String _key1 = "selectedTokenId";
     String _key2 = "selectedTokenWalletId";
+    String _key3 = "selectedTokenWalletWalletId";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(_key1, _tokenId);
     prefs.setString(_key2, _tokenWalletId);
+    prefs.setString(_key3, _tokenWalletWalletId);
 
     // print("LocalData() saveSelectedToken :  $_key : $_value");
     bool checkValue = prefs.containsKey(_key2);
@@ -101,6 +103,13 @@ class LocalData {
 
   Future<String?> getSelectedTokenWalletId() async {
     String _key = "selectedTokenWalletId";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? selectedTokenWalletId = prefs.getString(_key);
+    return selectedTokenWalletId;
+  }
+
+  Future<String?> getSelectedTokenWalletWalletId() async {
+    String _key = "selectedTokenWalletWalletId";
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? selectedTokenWalletId = prefs.getString(_key);
     return selectedTokenWalletId;

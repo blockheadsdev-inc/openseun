@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:seunswap/api/seunswap_api.dart';
 import 'package:seunswap/models/tokens/h2o_bond.dart';
@@ -16,6 +18,9 @@ class SwapTokenForm extends StatefulWidget {
 
 class _SwapTokenFormState extends State<SwapTokenForm> {
   late String tokenWalletId;
+  late String walletId;
+  late int tokenBalance;
+  late int tokenPrice;
   late TextEditingController _tokenId;
   late TextEditingController _amount1;
   late TextEditingController _amount2;
@@ -39,9 +44,20 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
     _amount1 = TextEditingController();
     _amount2 = TextEditingController();
 
+    tokenBalance = 0;
+    tokenPrice = 0;
+
     _image1 = _tokenHbar.tokenIcon;
     _image2 = _tokenH20Bond.tokenIcon;
 
+    _getTokenInfo();
+    Timer.periodic(const Duration(seconds: 60), (Timer timer) {
+      if (mounted) {
+        _getTokenInfo();
+      }
+    });
+
+    // _getTokenBalance();
     // _initGetTokenId();
     super.initState();
   }
@@ -65,15 +81,38 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
     });
   }
 
-  Future<void> _getTokenId() async {
+  Future<void> _getTokenInfo() async {
     String? _tid = (await _dataStorage.getSelectedTokenId())!;
     String? _twid = (await _dataStorage.getSelectedTokenWalletId())!;
+    String? _walletId = (await _dataStorage.getStringValues("walletId"))!;
+    String? _twalletId =
+        (await _dataStorage.getStringValues("selectedTokenWalletWalletId"));
+    Map? _data = await _seunSwapApi.fetchTokenBalance(_twalletId!, _twid);
+    Map? _priceData = await _seunSwapApi.fetchTokenPrice(_twalletId, _twid);
     if (mounted) {
       setState(() {
         _tokenId.text = _tid;
         tokenWalletId = _twid;
+        walletId = _walletId;
+        tokenBalance = _data['balance'];
+        // tokenPrice = tinyBartoHbar(double.parse(_priceData['price'])).toInt();
+        tokenPrice = _priceData['price'];
       });
     }
+  }
+
+  double _calcAmount() {
+    double _qt = 0;
+    if (_amount1.text.isNotEmpty) {
+      double _tp = tokenPrice.toDouble();
+      double _hbarPrice = 0.2080 * 100000000;
+      double _amount = double.parse(_amount1.text);
+      double _tokenPriceTbar = _tp;
+      _qt = (_amount * _hbarPrice) / _tokenPriceTbar;
+      print("($_amount * $_hbarPrice) / $tokenPrice  =  $_qt");
+    }
+    print(_qt);
+    return _qt;
   }
 
   InputDecoration _decoration(String _label, [String? _hint]) {
@@ -117,9 +156,13 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
 
   void _swapHbarPos() {
     if (_hbarFieldPosition < 1) {
-      _hbarFieldPosition = 1;
+      setState(() {
+        _hbarFieldPosition = 1;
+      });
     } else {
-      _hbarFieldPosition = 0;
+      setState(() {
+        _hbarFieldPosition = 0;
+      });
     }
   }
 
@@ -169,7 +212,13 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
         tokenWalletId,
         int.parse(_amount1.text),
       );
-    } else {}
+    } else {
+      _seunSwapApi.sellToken(
+        _walletId,
+        tokenWalletId,
+        int.parse(_amount1.text),
+      );
+    }
   }
 
   void _returnSubmitButtonLogic() async {
@@ -187,18 +236,32 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
       _firstStartDialog();
     } else {
       _swapSubmit(_data!);
-      // if (_res['status'] != 500) {
-      //   _displaySnackMessage('Your Token Id is: ${_res['walletTokenId']}');
-      // } else {
-      //   _displaySnackMessage(
-      //       'Something went wrong. status: ${_res['status']}  error: ${_res['error']}');
-      // }
+      //   _displaySnackMessage('Success');
     }
   }
 
   double hbarToTinyBar(double _hbar) {
     double _r = _hbar * 100000000;
     return _r;
+  }
+
+  double tinyBartoHbar(double _hbar) {
+    double _r = _hbar / 100000000;
+    return _r;
+  }
+
+  void _addTokenBalance() {
+    String _d = _amount2.text;
+    String _suffix = "100";
+    _amount2.text = "$_d /$_suffix";
+  }
+
+  void _getTokenBalance() async {
+    _getTokenInfo();
+    Map? _data = await _seunSwapApi.fetchTokenBalance(walletId, tokenWalletId);
+    setState(() {
+      // tokenBalance = _data as int;
+    });
   }
 
   void _displaySnackMessage(String _message) {
@@ -208,11 +271,84 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
     }
   }
 
+  Widget _returnAmountField1() {
+    return TextFormField(
+      controller: _amount1,
+      keyboardType: TextInputType.number,
+      style: _textStyle(40),
+      onChanged: (text) {
+        print(text);
+        setState(() {
+          _amount2.text = _calcAmount().toString();
+          // _amount2.text = text;
+        });
+      },
+      decoration: InputDecoration(
+        hintText: "0",
+        suffixIcon: GestureDetector(
+          onTap: () {},
+          child: _image1,
+        ),
+      ),
+    );
+  }
+
+  Widget _returnAmountField2() {
+    return TextFormField(
+      controller: _amount2,
+      keyboardType: TextInputType.number,
+      style: _textStyle(40),
+      decoration: InputDecoration(
+        hintText: "0",
+        suffixIcon: Container(
+          width: 97.0,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "/$tokenBalance",
+                style: TextStyle(fontSize: 20),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: _image2,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _conditionalInputs() {
+    if (_hbarFieldPosition < 1) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _returnAmountField1(),
+          _returnAmountField2(),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _returnAmountField2(),
+          _returnAmountField1(),
+        ],
+      );
+      ;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // _initGetTokenId();
-    // _tokenId.clear();
-    _getTokenId();
+    // _getTokenInfo();
+    // _addTokenBalance();
+    // _getTokenBalance();
     return Padding(
       padding: const EdgeInsets.only(top: 20, left: 8.0, right: 8.0),
       child: Container(
@@ -311,36 +447,7 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
                   children: [
                     Expanded(
                       // width: 250,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextFormField(
-                            controller: _amount1,
-                            keyboardType: TextInputType.number,
-                            style: _textStyle(40),
-                            decoration: InputDecoration(
-                              hintText: "0",
-                              suffixIcon: GestureDetector(
-                                onTap: () {},
-                                child: _image1,
-                              ),
-                            ),
-                          ),
-                          TextFormField(
-                            controller: _amount2,
-                            keyboardType: TextInputType.number,
-                            style: _textStyle(40),
-                            decoration: InputDecoration(
-                              hintText: "0",
-                              suffixIcon: GestureDetector(
-                                onTap: () {},
-                                child: _image2,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: _conditionalInputs(),
                     ),
 
                     /// V   Swap Button   V  ///
@@ -362,6 +469,7 @@ class _SwapTokenFormState extends State<SwapTokenForm> {
                               // minWidth: 20,
                               onPressed: () {
                                 _swapValues();
+                                _swapHbarPos();
                               },
                               splashColor: Colors.blue[200],
                               shape: const CircleBorder(),

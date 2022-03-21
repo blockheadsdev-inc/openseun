@@ -10,7 +10,7 @@ class SeunSwapApi {
   final String _port = '8100';
   final String _network = 'testnet'; // mainnet or testnet?
 
-  LocalData _localData = LocalData();
+  final LocalData _localData = LocalData();
 
   final Map<String, String> _headers = {
     "Content-type": "application/json",
@@ -103,26 +103,27 @@ class SeunSwapApi {
     return _res;
   }
 
-  Future<Map> sellToken(
+  Future<String> sellToken(
     String _walletId,
     String _walletTokenId,
     int _amount,
   ) async {
-    String _endpoint = '/seunswap/$_network/SellToken';
-    String _url = "http://$_domain:$_port$_endpoint";
-    var _response = await _client.post(Uri.parse(_url),
-        body: """
+    String _body = """
         {
           "walletId": "$_walletId",
           "walletTokenId": "$_walletTokenId",
-          "amount": $_amount
+          "sell": $_amount
         }
-      """,
-        headers: _headers);
+      """;
+    print(_body);
+    String _endpoint = '/seunswap/$_network/sellToken';
+    String _url = "http://$_domain:$_port$_endpoint";
+    var _response =
+        await _client.post(Uri.parse(_url), body: _body, headers: _headers);
 
-    var _res = json.decode(_response.body);
-    print(_res);
-    return _res;
+    // var _res = json.decode(_response.body);
+    print("seunswapAPI sellToken ${_response.body}");
+    return _response.body;
   }
 
   Future<String> purchaseToken(
@@ -154,36 +155,62 @@ class SeunSwapApi {
   ) async {
     String _endpoint = '/seunswap/$_network/fetchTokenPrice';
     String _url = 'http://$_domain:$_port$_endpoint';
-    String _params = """
-          walletId=$_walletId
-          &
-          walletTokenId=$_walletTokenId
+    String _body = """
+    {
+          "walletId": "$_walletId",
+          "walletTokenId": "$_walletTokenId"
+    }
       """;
-    var _response = await _client.get(Uri.parse("$_url?${_params.trim}"),
-        headers: _headers);
+    // print(_body);
 
-    var _res = json.decode(_response.body);
-    print(_res);
-    return _res;
+    Map _errorMap = <int, String>{};
+
+    try {
+      var _response = await _client.post(
+        Uri.parse(_url),
+        body: _body,
+        headers: _headers,
+      );
+      var _res = json.decode(_response.body);
+      print("seunswapAPI fetchTokenBalance()  $_res");
+      return _res;
+    } catch (e) {
+      _errorMap = {1: '$e'};
+      print(e);
+      return _errorMap;
+    }
   }
 
   Future<Map> fetchTokenBalance(
     String _walletId,
     String _walletTokenId,
   ) async {
-    String _endpoint = '/seunswap/$_network/purchaseToken';
+    String _endpoint = '/seunswap/$_network/fetchTokenBalance';
     String _url = 'http://$_domain:$_port$_endpoint';
-    String _params = """
-          walletId=$_walletId
-          &
-          walletTokenId=$_walletTokenId
+    String _body = """
+    {
+          "walletId": "$_walletId",
+          "walletTokenId": "$_walletTokenId"
+    }
       """;
-    var _response = await _client.get(Uri.parse("$_url?${_params.trim}"),
-        headers: _headers);
+    // print(_body);
 
-    var _res = json.decode(_response.body);
-    print(_res);
-    return _res;
+    Map _errorMap = <int, String>{};
+
+    try {
+      var _response = await _client.post(
+        Uri.parse(_url),
+        body: _body,
+        headers: _headers,
+      );
+      var _res = json.decode(_response.body);
+      print("seunswapAPI fetchTokenBalance()  $_res");
+      return _res;
+    } catch (e) {
+      _errorMap = {1: '$e'};
+      print(e);
+      return _errorMap;
+    }
   }
 
   Future<List<Token>> fetchListedTokens() async {
